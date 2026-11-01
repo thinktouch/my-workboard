@@ -1,0 +1,46 @@
+# Local task data and migration backups
+/data.sqlite
+/data.sqlite-*
+/data.json
+/data.json.*
+*.bak
+
+# Optional local Windows runtime; keep its license in source control
+/runtime/node.exe
+/runtime/node
+/.workboard-service.json
+/.workboard-service.json.*.tmp
+
+# Dependencies, test reports, and temporary files
+/node_modules/
+/coverage/
+/.cache/
+/tmp/
+/temp/
+*.log
+*.tmp
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+
+# Generated previews, design studies, and old hosting output
+/design/
+/sites/
+/scripts/axis-concepts.mjs
+/public/logos.html
+/public/brand/logo-a.svg
+/public/brand/logo-b.svg
+/public/brand/logo-c.svg
+/*.jpg
+/*.jpeg
+/*.png
+/*.webp
+/*.zip
+/*.tar.gz
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
