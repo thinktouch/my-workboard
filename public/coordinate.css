@@ -1,51 +1,23 @@
-/* Minimalist Baby Blue Frost Telemetry Coordinate System: zero blur shadows, razor-sharp geometry. */
+/* Pure Minimalist Coordinate System: 3-layer flat canvas, clean neutral axes, crisp arrowheads & reticle. */
 .coordinate-frame {
   position: relative;
   min-height: 0;
   overflow: hidden;
-  padding: 26px 26px;
-  border: 1px solid #d3e7f4;
-  border-radius: 6px;
-  background-color: #eef5fa;
-  background-image: radial-gradient(#89cff04a 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position: center center;
+  padding: 20px 6px 14px;
 }
 
-/* Crisp HUD corner brackets */
-.hud-corners { position: absolute; inset: 8px; z-index: 3; pointer-events: none; }
-.hud-c { position: absolute; width: 10px; height: 10px; border-color: #89cff0; border-style: solid; border-width: 0; }
-.hud-c.tl { top: 0; left: 0; border-top-width: 1.5px; border-left-width: 1.5px; border-top-left-radius: 2px; }
-.hud-c.tr { top: 0; right: 0; border-top-width: 1.5px; border-right-width: 1.5px; border-top-right-radius: 2px; }
-.hud-c.bl { bottom: 0; left: 0; border-bottom-width: 1.5px; border-left-width: 1.5px; border-bottom-left-radius: 2px; }
-.hud-c.br { bottom: 0; right: 0; border-bottom-width: 1.5px; border-right-width: 1.5px; border-bottom-right-radius: 2px; }
-
-/* Flat, sharp Baby Blue telemetry rails & precision ticks */
+/* Crisp neutral titanium axes (no ticks, no dots, no glow) */
 .coordinate-axes { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.axis-line { position: absolute; border-radius: 2px; }
+.axis-line { position: absolute; }
 .axis-x {
-  top: 50%; left: 10px; right: 10px; height: 1.5px;
+  top: 50%; left: 0; right: 2px; height: 1.5px;
   transform: translateY(-50%);
-  background: linear-gradient(90deg, #c3e1f2 0%, #89cff0 36%, #59bce9 50%, #89cff0 64%, #4fb6e7 100%);
-}
-.axis-x::before {
-  content: '';
-  position: absolute;
-  left: 68px; right: 76px; top: 50%; height: 7px;
-  transform: translateY(-50%);
-  background: repeating-linear-gradient(90deg, #89cff080 0 1px, transparent 1px 28px);
+  background: linear-gradient(90deg, #d2dbe3 0%, #b3c2cf 45%, #8fa5b8 100%);
 }
 .axis-y {
-  top: 10px; bottom: 10px; left: 50%; width: 1.5px;
+  top: 4px; bottom: 2px; left: 50%; width: 1.5px;
   transform: translateX(-50%);
-  background: linear-gradient(0deg, #c3e1f2 0%, #89cff0 36%, #59bce9 50%, #89cff0 64%, #4fb6e7 100%);
-}
-.axis-y::before {
-  content: '';
-  position: absolute;
-  top: 56px; bottom: 48px; left: 50%; width: 7px;
-  transform: translateX(-50%);
-  background: repeating-linear-gradient(180deg, #89cff080 0 1px, transparent 1px 28px);
+  background: linear-gradient(0deg, #d2dbe3 0%, #b3c2cf 45%, #8fa5b8 100%);
 }
 
 /* Sharp 1:1 symmetric double-chevron arrowheads */
@@ -57,38 +29,31 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.axis-head .head-main { stroke: #2c9bd1; stroke-width: 1.65; }
-.axis-head .head-sub { stroke: #89cff0; stroke-width: 1.25; }
+.axis-head .head-main { stroke: #6a8296; stroke-width: 1.6; }
+.axis-head .head-sub { stroke: #b7c6d3; stroke-width: 1.2; }
 .axis-x .axis-head { right: -3px; top: 50%; transform: translateY(-50%); }
 .axis-y .axis-head { top: -3px; left: 50%; transform: translateX(-50%); }
 
-/* Flat pill labels sitting cleanly in the channels */
+/* Unified 4px-radius flat axis labels sitting cleanly in the channels */
 .axis-label {
   position: absolute;
   z-index: 4;
-  padding: 1px 8px;
-  border-radius: 999px;
-  border: 1px solid #d4e6f2;
-  background: #f5fafe;
-  color: #5e7c92;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 17px;
-  letter-spacing: 1px;
-  text-indent: 1px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--canvas);
+  color: #6f8293;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: .6px;
+  text-indent: .6px;
 }
-.axis-top {
-  top: 23px; left: 50%; transform: translateX(-50%);
-  border-color: #89cff0; background: #eef8fe; color: #166a96;
-}
-.axis-right {
-  top: 50%; right: 25px; transform: translateY(-50%);
-  border-color: #89cff0; background: #eef8fe; color: #166a96;
-}
-.axis-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); }
-.axis-left { top: 50%; left: 8px; transform: translateY(-50%); }
+.axis-top { top: 18px; left: 50%; transform: translateX(-50%); color: #465d70; font-weight: 600; }
+.axis-right { top: 50%; right: 16px; transform: translateY(-50%); color: #465d70; font-weight: 600; }
+.axis-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.axis-left { top: 50%; left: 0; transform: translateY(-50%); }
 
-/* Pure geometric flat dual-ring reticle origin (no blur glow) */
+/* Clean dual-ring optical reticle origin */
 .axis-origin {
   position: absolute;
   top: 50%; left: 50%;
@@ -97,43 +62,37 @@
   place-items: center;
   width: 24px; height: 24px;
   transform: translate(-50%, -50%);
-  border: 1px solid #89cff0;
+  border: 1px solid #b5c4d1;
   border-radius: 50%;
   background: #ffffff;
-  box-shadow: 0 0 0 4px #eef5fa;
+  box-shadow: 0 0 0 4px var(--canvas);
 }
 .axis-origin::before {
   content: '';
   position: absolute;
   inset: 3px;
-  border: 1px dashed #a4daf4;
+  border: 1px dashed #cbd6e0;
   border-radius: 50%;
 }
 .axis-origin i {
   position: relative;
   width: 6px; height: 6px;
   border-radius: 50%;
-  border: 1.5px solid #1b7db0;
+  border: 1.5px solid #597285;
   background: #89cff0;
 }
 
 @media(max-width:760px) {
-  .coordinate-frame { padding: 20px 12px; }
-  .hud-corners { inset: 5px; }
-  .hud-c { width: 8px; height: 8px; }
-  .axis-x { left: 6px; right: 6px; }
-  .axis-y { top: 6px; bottom: 6px; }
-  .axis-x::before, .axis-y::before { display: none; }
-  .axis-label { padding: 0 6px; font-size: 10px; line-height: 16px; letter-spacing: 0; text-indent: 0; }
-  .axis-left { left: 5px; }
-  .axis-right { right: 20px; }
-  .axis-top { top: 19px; }
-  .axis-bottom { bottom: 5px; }
-  .axis-origin { width: 20px; height: 20px; box-shadow: 0 0 0 3px #eef5fa; }
+  .coordinate-frame { padding: 18px 2px 12px; }
+  .axis-label { padding: 0 4px; font-size: 11px; line-height: 16px; letter-spacing: 0; text-indent: 0; }
+  .axis-left { left: 0; }
+  .axis-right { right: 14px; }
+  .axis-top { top: 16px; }
+  .axis-bottom { bottom: 0; }
+  .axis-origin { width: 20px; height: 20px; box-shadow: 0 0 0 3px var(--canvas); }
   .axis-origin i { width: 5px; height: 5px; }
 }
 @media(max-height:560px) and (min-width:761px) {
-  .coordinate-frame { padding-top: 20px; padding-bottom: 20px; }
-  .axis-top { top: 19px; }
-  .axis-bottom { bottom: 5px; }
+  .coordinate-frame { padding-top: 16px; padding-bottom: 10px; }
+  .axis-top { top: 14px; }
 }

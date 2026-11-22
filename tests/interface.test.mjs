@@ -27,7 +27,8 @@ test('真实前端事件：三点浮层展开/收起，单行编辑保存，象�
   vm.runInContext(await readFile(path.join(ROOT,'public/app.js'),'utf8'),context);
   const state=async()=>await (await fetch(base+'/api/data')).json();
   await until(()=>get('#matrix').innerHTML.includes('原始任务'));
-  assert.deepEqual(filters.map(b=>b.textContent),['全部（2）','待办（1）','处理中（0）','已完成（1）']);
+  assert.deepEqual(filters.map(b=>b.attributes['aria-label']),['全部 2','待办 1','处理中 0','已完成 1']);
+  assert.ok(filters[0].innerHTML.includes('class="filter-count"'));
   assert.equal(filters[0].attributes['aria-pressed'],'true');
   assert.ok(get('#matrix').innerHTML.includes('已有完成任务'));
   assert.deepEqual(Array.from(get('.send-targets').innerHTML.matchAll(/data-send="([^"]+)"/g),m=>m[1]),['q1','q2','q3','q4']);
@@ -46,7 +47,7 @@ test('真实前端事件：三点浮层展开/收起，单行编辑保存，象�
   await click('menu');assert.ok(get('#task-menu').innerHTML.includes('开始处理'));await click('progress');
   assert.equal((await state()).tasks.find(t=>t.id===id).inProgress,true);
   assert.ok(get('#matrix').innerHTML.includes('class="task-progress"'));
-  assert.deepEqual(filters.map(b=>b.textContent),['全部（2）','待办（1）','处理中（1）','已完成（1）']);
+  assert.deepEqual(filters.map(b=>b.attributes['aria-label']),['全部 2','待办 1','处理中 1','已完成 1']);
   await filters[2].listeners.click();assert.ok(get('#matrix').innerHTML.includes('原始任务'));assert.ok(!get('#matrix').innerHTML.includes('已有完成任务'));
   await filters[1].listeners.click();assert.ok(get('#matrix').innerHTML.includes('原始任务'));assert.ok(!get('#matrix').innerHTML.includes('已有完成任务'));
   await click('menu');assert.ok(get('#task-menu').innerHTML.includes('恢复待办'));await click('progress');
@@ -63,8 +64,9 @@ test('真实前端事件：三点浮层展开/收起，单行编辑保存，象�
   get('#task-input').value='点象限直接发';get('.send-targets').listeners.click({target:{closest:()=>({dataset:{send:'q2'}})}});
   await until(async()=>(await state()).tasks.some(t=>t.text==='点象限直接发'));
   assert.equal((await state()).tasks.find(t=>t.text==='点象限直接发').quadrant,'q2');assert.equal(get('#task-input').value,'');
-  assert.deepEqual(filters.map(b=>b.textContent),['全部（3）','待办（2）','处理中（0）','已完成（1）']);
+  assert.deepEqual(filters.map(b=>b.attributes['aria-label']),['全部 3','待办 2','处理中 0','已完成 1']);
   assert.equal(filters[1].attributes['aria-pressed'],'true');await filters[0].listeners.click();
+  assert.ok(get('#matrix').innerHTML.indexOf('点象限直接发')<get('#matrix').innerHTML.indexOf('已有完成任务'));
   await click('menu');await click('move-menu');assert.ok(get('#task-menu').innerHTML.includes('class="move-actions"'));assert.ok(!get('#task-menu').innerHTML.includes('class="task-actions"'));
   document.listeners.keydown({key:'Escape',preventDefault(){}});assert.ok(get('#task-menu').innerHTML.includes('class="task-actions"'));assert.equal(get('#task-menu').hidden,false);
   await click('move-menu');await click('move',{q:'q3'});assert.equal((await state()).tasks.find(t=>t.id===id).quadrant,'q3');

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#eef5fa">
+  <meta name="theme-color" content="#f1f4f7">
   <meta name="description" content="用重要与紧急整理任务的个人工作台。">
   <title>我的工作台</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="workspace.css?v=36">
-  <link rel="stylesheet" href="coordinate.css?v=21">
+  <link rel="stylesheet" href="workspace.css?v=37">
+  <link rel="stylesheet" href="coordinate.css?v=22">
   <script src="task-motion.js?v=1" defer></script>
-  <script src="app.js?v=26" defer></script>
+  <script src="app.js?v=27" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">跳到任务工作区</a>
@@ -37,12 +37,11 @@
     <header class="topbar">
       <a class="brand" href="./" aria-label="我的工作台首页"><img class="brand-mark" src="brand/current.svg" alt="" width="24" height="24"><h1 class="brand-name">我的工作台</h1></a>
       <form id="task-form" class="quick-capture" novalidate><label class="sr-only" for="task-input">任务内容</label><input id="task-input" name="task" placeholder="安排下一项任务…" maxlength="500" autocomplete="off"><div class="send-targets" role="group" aria-label="发送到象限"></div></form>
-      <div class="topbar-tools"><label class="search"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" name="search" aria-label="搜索任务" placeholder="搜索" autocomplete="off"><kbd>/</kbd></label><nav class="filter-tabs" aria-label="任务视图"><button data-filter="all" class="selected" aria-pressed="true">全部（0）</button><button id="nav-board" data-filter="pending" aria-pressed="false">待办（0）</button><button id="nav-processing" data-filter="processing" aria-pressed="false">处理中（0）</button><button id="nav-done" data-filter="done" aria-pressed="false">已完成（0）</button></nav><button id="trash-toggle" class="trash-toggle" aria-label="最近删除" aria-expanded="false" aria-controls="recent-deleted"><span>最近删除</span><span id="trash-badge" class="trash-badge" hidden></span></button></div>
+      <div class="topbar-tools"><label class="search"><svg aria-hidden="true"><use href="#i-search"/></svg><input id="search-input" name="search" aria-label="搜索任务" placeholder="搜索" autocomplete="off"><kbd>/</kbd></label><nav class="filter-tabs" aria-label="任务视图"><button data-filter="all" class="selected" aria-pressed="true"><span>全部</span><span class="filter-count">0</span></button><button id="nav-board" data-filter="pending" aria-pressed="false"><span>待办</span><span class="filter-count">0</span></button><button id="nav-processing" data-filter="processing" aria-pressed="false"><span>处理中</span><span class="filter-count">0</span></button><button id="nav-done" data-filter="done" aria-pressed="false"><span>已完成</span><span class="filter-count">0</span></button></nav><button id="trash-toggle" class="trash-toggle" aria-label="最近删除" aria-expanded="false" aria-controls="recent-deleted"><span>最近删除</span><span id="trash-badge" class="trash-badge" hidden></span></button></div>
     </header>
     <main id="main-content" tabindex="-1">
       <div id="feedback" class="sr-only" role="status" aria-live="polite"></div>
       <section class="coordinate-frame" aria-label="四象限任务坐标系">
-        <div class="hud-corners" aria-hidden="true"><i class="hud-c tl"></i><i class="hud-c tr"></i><i class="hud-c bl"></i><i class="hud-c br"></i></div>
         <div class="coordinate-axes" aria-hidden="true">
           <div class="axis-line axis-x"><svg class="axis-head" viewBox="0 0 14 14"><path class="head-sub" d="M3 4.5 5.5 7 3 9.5"/><path class="head-main" d="M6.5 2.5 11.5 7 6.5 11.5"/></svg></div>
           <div class="axis-line axis-y"><svg class="axis-head" viewBox="0 0 14 14"><path class="head-sub" d="M4.5 11 7 8.5 9.5 11"/><path class="head-main" d="M2.5 7.5 7 2.5 11.5 7.5"/></svg></div>
