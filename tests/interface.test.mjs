@@ -9,11 +9,11 @@ import { createWorkboardServer } from '../server.mjs';
 const ROOT=path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 class Element {
   constructor(){this.listeners={};this.dataset={};this.hidden=false;this.value='';this.innerHTML='';this.textContent='';this.attributes={};this.style={setProperty(){}};const classes=new Set();this.classList={toggle(name,force){const add=force??!classes.has(name);if(add)classes.add(name);else classes.delete(name);},add:name=>classes.add(name),remove:name=>classes.delete(name),contains:name=>classes.has(name)};}
-  addEventListener(name,fn){this.listeners[name]=fn;}
+  addEventListener(name,fn){const previous=this.listeners[name];this.listeners[name]=previous?async event=>{await previous(event);return fn(event);}:fn;}
   setAttribute(name,value){this.attributes[name]=value;} replaceChildren(...children){this.children=children;} append(child){(this.children??=[]).push(child);} focus(options){this.focusOptions=options;} setSelectionRange(){} matches(selector){return selector==='.inline-input';}
 }
 async function until(check){for(let n=0;n<100;n++){if(await check())return;await new Promise(resolve=>setTimeout(resolve,10));}assert.fail('异步界面操作未完成');}
-test('真实前端事件：三点展开/收起，单行编辑保存，象限按钮直接发送',async t=>{
+test('真实前端事件：三点浮层展开/收起，单行编辑保存，象限按钮直接发送',async t=>{
   const dir=await mkdtemp(path.join(os.tmpdir(),'shixu-ui-'));const {server}=await createWorkboardServer({dataFile:path.join(dir,'data.sqlite')});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const base=`http://127.0.0.1:${server.address().port}`;
   t.after(async()=>{server.closeAllConnections();await new Promise(resolve=>server.close(resolve));await rm(dir,{recursive:true,force:true});});
   const initial=await (await fetch(base+'/api/tasks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:'原始任务',quadrant:'q1'})})).json(),id=initial.result.id;
@@ -31,21 +31,25 @@ test('真实前端事件：三点展开/收起，单行编辑保存，象限按�
   assert.equal(filters[0].attributes['aria-pressed'],'true');
   assert.ok(get('#matrix').innerHTML.includes('已有完成任务'));
   assert.deepEqual(Array.from(get('.send-targets').innerHTML.matchAll(/data-send="([^"]+)"/g),m=>m[1]),['q1','q2','q3','q4']);
-  function click(action,extra={},taskId=id){const button={dataset:{action,...extra},closest:s=>s==='[data-id]'?{dataset:{id:taskId}}:null};return get('#matrix').listeners.click({target:{closest:s=>s==='[data-action]'?button:null}});}
-  await click('menu');assert.ok(get('#matrix').innerHTML.includes('class="task-actions"'));assert.ok(get('#matrix').innerHTML.includes('data-action="delete"'));assert.ok(get('#matrix').innerHTML.includes('data-action="move-menu"'));
-  assert.ok(get('#matrix').innerHTML.includes('class="task-timeline"'));
-  assert.ok(get('#matrix').innerHTML.includes(`datetime="${initial.tasks[0].createdAt}"`));
-  assert.ok(!get('#matrix').innerHTML.includes('<dt>完成</dt>'));
-  assert.match(get('#matrix').innerHTML,/task-time-clock">[0-9]{2}:[0-9]{2}:[0-9]{2}/);
+  function click(action,extra={},taskId=id){const button={dataset:{action,...extra},closest:s=>s==='[data-id]'?{dataset:{id:taskId}}:null};return get(action==='menu'||action==='toggle'?'#matrix':'#task-menu').listeners.click({target:{closest:s=>s==='[data-action]'?button:null}});}
+  await click('menu');assert.equal(get('#task-menu').hidden,false);assert.equal(get('#task-menu').dataset.id,id);
+  assert.ok(get('#task-menu').innerHTML.includes('class="task-actions"'));assert.ok(get('#task-menu').innerHTML.includes('data-action="delete"'));assert.ok(get('#task-menu').innerHTML.includes('data-action="move-menu"'));
+  assert.ok(!get('#matrix').innerHTML.includes('class="task-actions"'));assert.ok(!get('#matrix').innerHTML.includes('class="task-timeline"'));
+  assert.ok(get('#task-menu').innerHTML.includes('class="task-timeline"'));
+  assert.ok(get('#task-menu').innerHTML.includes(`datetime="${initial.tasks[0].createdAt}"`));
+  assert.ok(!get('#task-menu').innerHTML.includes('<dt>完成</dt>'));
+  assert.match(get('#task-menu').innerHTML,/task-time-clock">[0-9]{2}:[0-9]{2}:[0-9]{2}/);
 
-  await click('menu');assert.ok(!get('#matrix').innerHTML.includes('class="task-actions"'));
-  await click('menu');assert.ok(get('#matrix').innerHTML.includes('开始处理'));await click('progress');
+  await click('menu');assert.equal(get('#task-menu').hidden,true);
+  await click('menu');document.listeners.pointerdown({target:{closest:()=>null}});assert.equal(get('#task-menu').hidden,true);
+  await click('menu');document.listeners.keydown({key:'Escape',preventDefault(){}});assert.equal(get('#task-menu').hidden,true);
+  await click('menu');assert.ok(get('#task-menu').innerHTML.includes('开始处理'));await click('progress');
   assert.equal((await state()).tasks.find(t=>t.id===id).inProgress,true);
   assert.ok(get('#matrix').innerHTML.includes('class="task-progress"'));
   assert.deepEqual(filters.map(b=>b.textContent),['全部（2）','待办（1）','处理中（1）','已完成（1）']);
   await filters[2].listeners.click();assert.ok(get('#matrix').innerHTML.includes('原始任务'));assert.ok(!get('#matrix').innerHTML.includes('已有完成任务'));
   await filters[1].listeners.click();assert.ok(get('#matrix').innerHTML.includes('原始任务'));assert.ok(!get('#matrix').innerHTML.includes('已有完成任务'));
-  await click('menu');assert.ok(get('#matrix').innerHTML.includes('恢复待办'));await click('progress');
+  await click('menu');assert.ok(get('#task-menu').innerHTML.includes('恢复待办'));await click('progress');
   assert.equal((await state()).tasks.find(t=>t.id===id).inProgress,false);
   assert.ok(!get('#matrix').innerHTML.includes('class="task-progress"'));
   await filters[2].listeners.click();assert.ok(get('#matrix').innerHTML.includes('暂无处理中的任务'));assert.ok(!get('#matrix').innerHTML.includes('原始任务'));await filters[0].listeners.click();
@@ -61,15 +65,17 @@ test('真实前端事件：三点展开/收起，单行编辑保存，象限按�
   assert.equal((await state()).tasks.find(t=>t.text==='点象限直接发').quadrant,'q2');assert.equal(get('#task-input').value,'');
   assert.deepEqual(filters.map(b=>b.textContent),['全部（3）','待办（2）','处理中（0）','已完成（1）']);
   assert.equal(filters[1].attributes['aria-pressed'],'true');await filters[0].listeners.click();
-  await click('menu');await click('move-menu');assert.ok(get('#matrix').innerHTML.includes('class="move-actions"'));await click('move',{q:'q3'});assert.equal((await state()).tasks.find(t=>t.id===id).quadrant,'q3');
+  await click('menu');await click('move-menu');assert.ok(get('#task-menu').innerHTML.includes('class="move-actions"'));assert.ok(!get('#task-menu').innerHTML.includes('class="task-actions"'));
+  document.listeners.keydown({key:'Escape',preventDefault(){}});assert.ok(get('#task-menu').innerHTML.includes('class="task-actions"'));assert.equal(get('#task-menu').hidden,false);
+  await click('move-menu');await click('move',{q:'q3'});assert.equal((await state()).tasks.find(t=>t.id===id).quadrant,'q3');
   await click('progress');await click('toggle');await click('toggle');
   assert.equal(get('#feedback').classList.contains('inline-feedback'),false);
   assert.equal((await state()).tasks.find(t=>t.id===id).inProgress,false);
   await click('toggle');await filters[0].listeners.click();await click('menu');
   const completed=(await state()).tasks.find(t=>t.id===id);
   assert.equal(completed.createdAt,initial.tasks[0].createdAt);
-  assert.ok(get('#matrix').innerHTML.includes('<dt>完成</dt>'));
-  assert.ok(get('#matrix').innerHTML.includes(`datetime="${completed.completedAt}"`));
+  assert.ok(get('#task-menu').innerHTML.includes('<dt>完成</dt>'));
+  assert.ok(get('#task-menu').innerHTML.includes(`datetime="${completed.completedAt}"`));
   await click('menu');
   await click('menu');await click('delete');assert.ok(!(await state()).tasks.some(t=>t.id===id));assert.equal((await state()).trash[0].task.id,id);
   assert.equal(get('#recent-deleted').hidden,true);
