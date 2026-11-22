@@ -1,32 +1,139 @@
-/* Blue metal spine, aligned mathematically through its shared center. */
-.coordinate-frame { position: relative; min-height: 0; overflow: hidden; padding: 24px 22px; border: 1px solid #d5e0ee; border-radius: 4px; background: #fff; box-shadow: 0 1px 3px #1b345608, 0 10px 28px -16px #1b345614; }
+/* Minimalist Baby Blue Frost Telemetry Coordinate System: zero blur shadows, razor-sharp geometry. */
+.coordinate-frame {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  padding: 26px 26px;
+  border: 1px solid #d3e7f4;
+  border-radius: 6px;
+  background-color: #eef5fa;
+  background-image: radial-gradient(#89cff04a 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+}
+
+/* Crisp HUD corner brackets */
+.hud-corners { position: absolute; inset: 8px; z-index: 3; pointer-events: none; }
+.hud-c { position: absolute; width: 10px; height: 10px; border-color: #89cff0; border-style: solid; border-width: 0; }
+.hud-c.tl { top: 0; left: 0; border-top-width: 1.5px; border-left-width: 1.5px; border-top-left-radius: 2px; }
+.hud-c.tr { top: 0; right: 0; border-top-width: 1.5px; border-right-width: 1.5px; border-top-right-radius: 2px; }
+.hud-c.bl { bottom: 0; left: 0; border-bottom-width: 1.5px; border-left-width: 1.5px; border-bottom-left-radius: 2px; }
+.hud-c.br { bottom: 0; right: 0; border-bottom-width: 1.5px; border-right-width: 1.5px; border-bottom-right-radius: 2px; }
+
+/* Flat, sharp Baby Blue telemetry rails & precision ticks */
 .coordinate-axes { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
-.axis-line { position: absolute; color: #6187bd; border-radius: 4px; }
-.axis-x { top: 50%; left: 10px; right: 10px; height: 2px; transform: translateY(-50%); background: linear-gradient(90deg, #c6d6eb, #688fc5 40%, #688fc5 60%, #c6d6eb); box-shadow: 0 -1px 0 #fff, 0 1px 0 #dde7f4, 0 2px 3px #42628c14; }
-.axis-y { top: 8px; bottom: 8px; left: 50%; width: 2px; transform: translateX(-50%); background: linear-gradient(#c6d6eb, #688fc5 40%, #688fc5 60%, #c6d6eb); box-shadow: -1px 0 0 #fff, 1px 0 0 #dde7f4, 2px 0 3px #42628c14; }
-.axis-head { position: absolute; display: block; width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.45; stroke-linecap: round; stroke-linejoin: round; }
-.axis-x .axis-head { right: -2px; top: 50%; transform: translateY(-50%); }
-.axis-y .axis-head { top: -2px; left: 50%; transform: translateX(-50%); }
-.axis-label { position: absolute; z-index: 3; padding: 1px 6px; border-radius: 3px; color: #546d8e; background: #fff; font-size: 11px; font-weight: 500; line-height: 18px; letter-spacing: .8px; }
-.axis-top { top: 21px; left: 50%; transform: translateX(-50%); }
+.axis-line { position: absolute; border-radius: 2px; }
+.axis-x {
+  top: 50%; left: 10px; right: 10px; height: 1.5px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, #c3e1f2 0%, #89cff0 36%, #59bce9 50%, #89cff0 64%, #4fb6e7 100%);
+}
+.axis-x::before {
+  content: '';
+  position: absolute;
+  left: 68px; right: 76px; top: 50%; height: 7px;
+  transform: translateY(-50%);
+  background: repeating-linear-gradient(90deg, #89cff080 0 1px, transparent 1px 28px);
+}
+.axis-y {
+  top: 10px; bottom: 10px; left: 50%; width: 1.5px;
+  transform: translateX(-50%);
+  background: linear-gradient(0deg, #c3e1f2 0%, #89cff0 36%, #59bce9 50%, #89cff0 64%, #4fb6e7 100%);
+}
+.axis-y::before {
+  content: '';
+  position: absolute;
+  top: 56px; bottom: 48px; left: 50%; width: 7px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(180deg, #89cff080 0 1px, transparent 1px 28px);
+}
+
+/* Sharp 1:1 symmetric double-chevron arrowheads */
+.axis-head {
+  position: absolute;
+  display: block;
+  width: 14px; height: 14px;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.axis-head .head-main { stroke: #2c9bd1; stroke-width: 1.65; }
+.axis-head .head-sub { stroke: #89cff0; stroke-width: 1.25; }
+.axis-x .axis-head { right: -3px; top: 50%; transform: translateY(-50%); }
+.axis-y .axis-head { top: -3px; left: 50%; transform: translateX(-50%); }
+
+/* Flat pill labels sitting cleanly in the channels */
+.axis-label {
+  position: absolute;
+  z-index: 4;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid #d4e6f2;
+  background: #f5fafe;
+  color: #5e7c92;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 17px;
+  letter-spacing: 1px;
+  text-indent: 1px;
+}
+.axis-top {
+  top: 23px; left: 50%; transform: translateX(-50%);
+  border-color: #89cff0; background: #eef8fe; color: #166a96;
+}
+.axis-right {
+  top: 50%; right: 25px; transform: translateY(-50%);
+  border-color: #89cff0; background: #eef8fe; color: #166a96;
+}
 .axis-bottom { bottom: 6px; left: 50%; transform: translateX(-50%); }
 .axis-left { top: 50%; left: 8px; transform: translateY(-50%); }
-.axis-right { top: 50%; right: 24px; transform: translateY(-50%); }
-.axis-origin { position: absolute; top: 50%; left: 50%; z-index: 4; display: grid; place-items: center; width: 18px; height: 18px; transform: translate(-50%, -50%); border: 1px solid #7e9fce; border-radius: 4px; background: linear-gradient(145deg, #f6faff, #d5e4f8); box-shadow: 0 0 0 5px #fff, 0 2px 6px #2d518018, inset 0 1px 0 #fff; }
-.axis-origin i { width: 5px; height: 5px; border: 1px solid #3567b3; border-radius: 2px; background: #5a84c2; box-shadow: inset 0 1px 0 #a9cafb; }
-@media(max-width:700px) {
+
+/* Pure geometric flat dual-ring reticle origin (no blur glow) */
+.axis-origin {
+  position: absolute;
+  top: 50%; left: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 24px; height: 24px;
+  transform: translate(-50%, -50%);
+  border: 1px solid #89cff0;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px #eef5fa;
+}
+.axis-origin::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px dashed #a4daf4;
+  border-radius: 50%;
+}
+.axis-origin i {
+  position: relative;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  border: 1.5px solid #1b7db0;
+  background: #89cff0;
+}
+
+@media(max-width:760px) {
   .coordinate-frame { padding: 20px 12px; }
+  .hud-corners { inset: 5px; }
+  .hud-c { width: 8px; height: 8px; }
   .axis-x { left: 6px; right: 6px; }
   .axis-y { top: 6px; bottom: 6px; }
-  .axis-label { padding: 0 4px; font-size: 10px; line-height: 17px; letter-spacing: 0; }
+  .axis-x::before, .axis-y::before { display: none; }
+  .axis-label { padding: 0 6px; font-size: 10px; line-height: 16px; letter-spacing: 0; text-indent: 0; }
   .axis-left { left: 5px; }
-  .axis-right { right: 19px; }
-  .axis-top { top: 18px; }
+  .axis-right { right: 20px; }
+  .axis-top { top: 19px; }
   .axis-bottom { bottom: 5px; }
-  .axis-origin { width: 16px; height: 16px; box-shadow: 0 0 0 4px #fff, 0 2px 5px #2d518016, inset 0 1px 0 #fff; }
+  .axis-origin { width: 20px; height: 20px; box-shadow: 0 0 0 3px #eef5fa; }
+  .axis-origin i { width: 5px; height: 5px; }
 }
-@media(max-height:560px) and (min-width:701px) {
-  .coordinate-frame { padding-top: 18px; padding-bottom: 18px; }
-  .axis-top { top: 18px; }
-  .axis-bottom { bottom: 7px; }
+@media(max-height:560px) and (min-width:761px) {
+  .coordinate-frame { padding-top: 20px; padding-bottom: 20px; }
+  .axis-top { top: 19px; }
+  .axis-bottom { bottom: 5px; }
 }

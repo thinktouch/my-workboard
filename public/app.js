@@ -1,10 +1,10 @@
 (() => {
   'use strict';
   const quadrants=[
-    {id:'q2',title:'计划去做',priority:'重要 · 不紧急',icon:'calendar',hint:'安排值得提前规划的事'},
-    {id:'q1',title:'立即行动',priority:'重要 · 紧急',icon:'bolt',hint:'优先推进今天最重要的事'},
-    {id:'q4',title:'暂时搁置',priority:'不重要 · 不紧急',icon:'coffee',hint:'暂存以后再看的事'},
-    {id:'q3',title:'灵活安排',priority:'不重要 · 紧急',icon:'clock',hint:'收纳可顺手或委派的事'}
+    {id:'q2',code:'02',title:'计划去做',priority:'重要 · 不紧急',icon:'calendar',hint:'安排值得提前规划的事'},
+    {id:'q1',code:'01',title:'立即行动',priority:'重要 · 紧急',icon:'bolt',hint:'优先推进今天最重要的事'},
+    {id:'q4',code:'04',title:'暂时搁置',priority:'不重要 · 不紧急',icon:'coffee',hint:'暂存以后再看的事'},
+    {id:'q3',code:'03',title:'灵活安排',priority:'不重要 · 紧急',icon:'clock',hint:'收纳可顺手或委派的事'}
   ];
   const $=s=>document.querySelector(s),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),icon=n=>`<svg aria-hidden="true"><use href="#i-${n}"/></svg>`;
   let doc={tasks:[],trash:[],revision:0},filter='all',search='',lastTarget='q1',editing=null,menu=null,moveMenu=null,deletedOpen=false,dragId=null,ready=false,saving=0,sending=false,queue=Promise.resolve();
@@ -159,7 +159,7 @@
     const labels={pending:'待办',processing:'处理中',all:'全部',done:'已完成'};
     document.querySelectorAll('[data-filter]').forEach(b=>{b.textContent=`${labels[b.dataset.filter]}（${counts[b.dataset.filter]}）`;b.classList.toggle('selected',b.dataset.filter===filter);b.setAttribute('aria-pressed',String(b.dataset.filter===filter));});
     const shown=(filter==='trash'?doc.trash.map(e=>e.task):doc.tasks).filter(visible);
-    patchMatrix(quadrants.map(q=>{const list=shown.filter(t=>t.quadrant===q.id).sort((a,b)=>Date.parse(a.createdAt)-Date.parse(b.createdAt));return `<section class="quadrant ${q.id}" data-quadrant="${q.id}" aria-label="${q.title}：${q.priority}"><div class="quadrant-heading"><span class="quadrant-icon">${icon(q.icon)}</span><h2>${q.title}</h2><span class="quadrant-priority">${q.priority}</span><span class="quadrant-count">${list.length}</span></div><div class="task-list" tabindex="0" role="region" aria-label="${q.title}任务列表">${list.map(row).join('')}${list.length?'':`<div class="empty-quadrant">${icon('plus')}<span>${!ready?'正在连接本地数据…':search?'没有匹配的任务':filter==='trash'?'没有删除的任务':filter==='processing'?'暂无处理中的任务':filter==='done'?'暂无已完成的任务':q.hint}</span></div>`}</div></section>`;}).join(''));
+    patchMatrix(quadrants.map(q=>{const list=shown.filter(t=>t.quadrant===q.id).sort((a,b)=>Date.parse(a.createdAt)-Date.parse(b.createdAt));return `<section class="quadrant ${q.id}" data-quadrant="${q.id}" aria-label="${q.title}：${q.priority}"><div class="quadrant-heading"><span class="quadrant-icon">${icon(q.icon)}</span><span class="quadrant-code">${q.code}</span><h2>${q.title}</h2><span class="quadrant-priority">${q.priority}</span><span class="quadrant-count">${list.length}</span></div><div class="task-list" tabindex="0" role="region" aria-label="${q.title}任务列表">${list.map(row).join('')}${list.length?'':`<div class="empty-quadrant">${icon('plus')}<span>${!ready?'正在连接本地数据…':search?'没有匹配的任务':filter==='trash'?'没有删除的任务':filter==='processing'?'暂无处理中的任务':filter==='done'?'暂无已完成的任务':q.hint}</span></div>`}</div></section>`;}).join(''));
     document.querySelectorAll('.quadrant').forEach(q=>q.querySelector('.task-list').scrollTop=q.dataset.quadrant===reset?0:scrolls[q.dataset.quadrant]||0);
     document.querySelectorAll('[data-send]').forEach(b=>{b.disabled=!ready||sending;b.classList.toggle('last-target',b.dataset.send===lastTarget);});
     window.workboardMotion?.synchronize();
